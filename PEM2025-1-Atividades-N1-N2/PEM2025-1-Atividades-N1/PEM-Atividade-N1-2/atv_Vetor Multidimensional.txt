@@ -1,0 +1,87 @@
+/*-------------------------------------------------------*
+*                      FATEC Ipiranga                    *
+* Disciplina: Programaçao Estruturada e Modular          *
+*          Prof. Veríssimo                               *
+*--------------------------------------------------------*
+* Objetivo do Programa: Vetor Multidimensional           *
+* Data - 07/03/2025                                      * 
+* Autor: Diego Souza                                     *
+*--------------------------------------------------------*/
+
+#include <stdio.h>
+#include <string.h>
+
+int main () {
+    char estoque[3][10][10], nomeproduto[3][10][50], codigoproduto[10], nome[50];
+    int rua, gondola;
+    int opcao;
+
+    // inicializar as variáveis com a string vazia
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 10; j++) {
+            strcpy(estoque[i][j], ""); 
+            strcpy(nomeproduto[i][j], "");
+        }
+    }
+
+    do {
+        
+        printf("\n1. Estocar produto\n");
+        printf("2. Retirar produto\n");
+        printf("3. Sair\n");
+        printf("Escolha uma opcao: ");
+        scanf("%d", &opcao);
+
+        if (opcao == 1) {
+            printf("Digite o codigo do produto: ");
+            scanf("%s", codigoproduto);
+            
+            printf("Digite o nome do produto: ");
+            scanf("%s", nome);  
+
+            printf("Digite o numero da rua (1 - Rua A, 2 - Rua B, 3 - Rua C): ");
+            scanf("%d", &rua);
+            
+            printf("Digite o numero da gondola (1 a 10): ");
+            scanf("%d", &gondola);
+            
+            rua -= 1;
+            gondola -= 1;
+
+            // Verifica se a gôndola está ocupada
+            if (strcmp(estoque[rua][gondola], "") == 0) {
+                strcpy(estoque[rua][gondola], codigoproduto);
+                strcpy(nomeproduto[rua][gondola], nome);
+                printf("Produto %s (%s) estocado com sucesso na Gondola %d da Rua %c.\n", codigoproduto, nome, gondola + 1, 'A' + rua);
+            } else {
+                printf("Erro: Gondola ja ocupada com o produto %s (%s).\n", estoque[rua][gondola], nomeproduto[rua][gondola]);
+            }
+
+        } else if (opcao == 2) {
+            printf("Digite o codigo do produto para retirada: ");
+            scanf("%s", codigoproduto);
+            
+            int encontrado = 0;
+            
+            // Buscar o código do produto
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 10; j++) {
+                    if (strcmp(estoque[i][j], codigoproduto) == 0) {
+                        printf("Produto %s (%s) retirado da Gondola %d da Rua %c.\n", codigoproduto, nomeproduto[i][j], j + 1, 'A' + i);
+                        strcpy(estoque[i][j], ""); 
+                        strcpy(nomeproduto[i][j], ""); 
+                        encontrado = 1;
+                    }
+                }
+            }
+            if (!encontrado) {
+                printf("Erro!!! Produto nao encontrado no estoque.\n");
+            }
+        }
+
+    } while (opcao != 3); 
+
+    printf("Saindo do sistema.\n");
+
+    return 0;
+}
