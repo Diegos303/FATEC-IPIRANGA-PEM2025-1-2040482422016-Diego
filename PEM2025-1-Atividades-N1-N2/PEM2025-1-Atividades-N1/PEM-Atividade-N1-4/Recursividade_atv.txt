@@ -1,0 +1,63 @@
+/*-------------------------------------------------------*
+*                      FATEC Ipiranga                    *
+* Disciplina: Programaçao Estruturada e Modular          *
+*          Prof. Veríssimo                               *
+*--------------------------------------------------------*
+* Objetivo do Programa: Recursividade                    *
+* Data - 28/03/2025                                      * 
+* Autor: Diego Souza                                     *
+*--------------------------------------------------------*/
+
+#include <stdio.h>
+#include <string.h>
+#include <dirent.h>
+#include <stdlib.h>
+
+void recursivo(const char *ponteiro) {
+    DIR *diretorio;  
+    struct dirent *entrada;  
+    char caminho[1024];
+    
+    // Abre o diretório para a busca
+    diretorio = opendir(ponteiro);  
+    if (diretorio == NULL) {
+        return;  // Retorna se não conseguir abrir o diretório.
+    }
+    
+    // Mostrar o caminho do diretório
+    printf("%s\n", ponteiro);  
+    
+    // Percorre os arquivos do diretório
+    while ((entrada = readdir(diretorio)) != NULL) {  
+        // Ignora "." e ".."
+        if (strcmp(entrada->d_name, ".") == 0 || strcmp(entrada->d_name, "..") == 0) {
+            continue;
+        }
+        
+        // Cria o caminho completo
+        snprintf(caminho, sizeof(caminho), "%s\\%s", ponteiro, entrada->d_name);  
+
+        // Se for um diretório, imprime com a marcação "[DIR]"
+        if (entrada->d_type == DT_DIR) {  
+            printf("[DIR] %s\n", entrada->d_name);  
+            recursivo(caminho);  // Chama recursivamente para o subdiretório
+        } else {
+            // Se for um arquivo, imprime com a marcação "|--"
+            printf("|-- %s\n", entrada->d_name);  // Alterado para "entrada"
+        }
+    }
+    
+    // Fecha o diretório
+    closedir(diretorio);  // Alterado para "diretorio"
+}
+
+int main() {
+   
+    printf("Arvore de Diretorios:\n");
+
+    // Onde é colocado a fonte do diretório
+    recursivo("C:\\Users\\diego\\Documents\\teste");  
+    
+    printf("Finalizado.\n");
+    return 0;
+}
